@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 9296aea5b0ec5be49b0319a90a24be72
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - SwordPrefab: {fileID: 1024566553949296370, guid: bc6cbc62fd9ec784dbba688f0a64bbc6,
+      type: 3}
+  - PistolBulletPrefab: {fileID: 1783207506052896549, guid: 6914911c40fa18d46b7ee73a0baa2a2d,
+      type: 3}
+  - RifleBulletPrefab: {fileID: 1783207506052896549, guid: 2a06d4ac22e6a5d419533d52aba67a81,
+      type: 3}
+  - FlamerFlamePrefab: {fileID: 3364715668119261844, guid: def2ddeca581c8d4da676f1447ac3193,
+      type: 3}
+  - GrenadePrefab: {fileID: 168906577, guid: 1d4f56d689739a3408afa7ab6ad12b65, type: 3}
+  - SniperPrefab: {fileID: 8473672515098139395, guid: 8610ed98f3c93bd48b9d88316f9d32a5,
+      type: 3}
+  - lR: {instanceID: 0}
+  - AmmoUI: {fileID: 2036181183841810003, guid: d247ddbdd0d83d94986fe241b1440b33,
+      type: 3}
+  - WeaponNameUI: {fileID: 3556436888461469070, guid: b97510ed8614bf044b268658f6373c63,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
