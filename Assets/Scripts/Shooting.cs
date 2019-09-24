@@ -12,39 +12,28 @@ public class Shooting : MonoBehaviour
 
     private Animator anim;
 
-    [Header("Manacosts")]
-    public static int swordManaCost = 0;
-    public static int pistolManaCost = 13;
-    public static int rifleManaCost = 16;
-    public static int flamerManaCost = 25;
-    public static int grenadeManaCost = 60;
-    public static int sniperManaCost = 10;
+    
+    
+    struct Weapon
+    {
+        public string Name { get; }
+        public int ManaCost{ get; }
+        public float RateOfFire{ get; }
+        public float ProjectileSpeed { get; }
+        public bool HoldButton { get; }
+        public Weapon(string name, int manaCost, float rateOfFire, float projectileSpeed, bool holdButton)
+        {
+            Name = name;
+            ManaCost = manaCost;
+            RateOfFire = rateOfFire;
+            ProjectileSpeed = projectileSpeed;
+            HoldButton = holdButton;
+        }
+    }
+    
+    private ArrayList weapons;
     int mineManaCost = 20;
-
-    [Header("Rates of fire")]
-    public static float swordROF = .02f;
-    public static float pistolROF = .4f;
-    public static float rifleROF = .2f;
-    public static float flamerROF = .05f;
-    public static float grenadeROF = 2f;
-    public static float sniperROF = .2f;
-
-    [Header("Projectile Speed")]
-    public static float swordSpeed = 10000f;
-    public static float pistolSpeed = 9000f;
-    public static float rifleSpeed = .6f;
-    public static float flamerSpeed = 6000f;
-    public static float grenadeSpeed = 3000f;
-    public static float sniperSpeed = 30f;
-
-    [Header("Hold Down Mouse1?")]
-    public static bool swordAuto = false;
-    public static bool pistolAuto = true;
-    public static bool rifleAuto = true;
-    public static bool flamerAuto = true;
-    public static bool grenadeAuto = false;
-    public static bool sniperAuto = false;
-
+    
     [Header("Prefabs")]
     public GameObject SwordPrefab;
     public GameObject PistolBulletPrefab;
@@ -61,7 +50,7 @@ public class Shooting : MonoBehaviour
     public Image ManaBG;
 
     [Header("Line Renderer")]
-    public LineRenderer lr;
+    //public LineRenderer lr;
     
     public GameObject caveFloor;
 
@@ -69,24 +58,35 @@ public class Shooting : MonoBehaviour
     private float nextFire;
 
     //Used lists here to store most weapon data, easily accessible with the index. (Could possibly be made into an array, but this works too)
-    string[] weaponName = { "Sword", "Magic Bolt", "Magic Missile", "Flames", "Magical Death Potion", "WIP raycast spell" };
+    /*string[] weaponName = { "Sword", "Magic Bolt", "Magic Missile", "Flames", "Magical Death Potion", "WIP raycast spell" };
     int[] manaCost = { swordManaCost, pistolManaCost, rifleManaCost, flamerManaCost, grenadeManaCost, sniperManaCost };
     float[] rof = { swordROF, pistolROF, rifleROF, flamerROF, grenadeROF, sniperROF };
     float[] speed = { swordSpeed, pistolSpeed, rifleSpeed, flamerSpeed, grenadeSpeed, sniperSpeed };
     bool[] holdDown = { swordAuto, pistolAuto, rifleAuto, flamerAuto, grenadeAuto, sniperAuto };
-
+*/
     //GameObjects could not be put into a list while simultaneously also be able to be defined in the editor, had to create separate GameObject variable "currentWeaponGO".
 
     int selectedWeaponIndex;
     GameObject currentWeaponGO;
-    
+
+    private void Awake()
+    {
+        
+        weapons = new ArrayList();
+        weapons.Add(new Weapon("Sword", 0, .02f, 10000, false));
+        weapons.Add(new Weapon("Magic Bolt", 13, .4f, 9000, true));
+        weapons.Add(new Weapon("Magic Missile", 16, .2f, .6f, true));
+        weapons.Add(new Weapon("Flames", 25, .05f, 6000, true)); 
+        weapons.Add(new Weapon("Explosive Potion", 60, 2.0f, 3000, false));
+        bool testi = ((Weapon)weapons[0]).HoldButton;
+    }
+
     void Start()
     {
-
         //Sword selected as the default weapon, player starts with it in hand. Also updates UI.
         selectedWeaponIndex = 0;
         currentWeaponGO = SwordPrefab;
-        WeaponNameUI.text = weaponName[0];
+        WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
         ManaUI.text = "1000";
         Debug.Log("Started");
         anim = GetComponent<Animator>();
@@ -99,7 +99,7 @@ public class Shooting : MonoBehaviour
     {
         //Mana.text = currentMana.ToString();
         //Determine if semi automatic or fully automatic
-        if (holdDown[selectedWeaponIndex] == false)
+        if (((Weapon)weapons[selectedWeaponIndex]).HoldButton == false)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time > nextFire)
             {
@@ -125,36 +125,36 @@ public class Shooting : MonoBehaviour
         {
             selectedWeaponIndex = 0;
             currentWeaponGO = SwordPrefab;
-            WeaponNameUI.text = weaponName[selectedWeaponIndex];
+            WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
             ManaUI.text = "";
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             selectedWeaponIndex = 1;
             currentWeaponGO = PistolBulletPrefab;
-            WeaponNameUI.text = weaponName[selectedWeaponIndex];
-            ManaUI.text = manaCost[selectedWeaponIndex].ToString();
+            WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
+            ManaUI.text = ((Weapon)weapons[selectedWeaponIndex]).ManaCost.ToString();
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             selectedWeaponIndex = 2;
             currentWeaponGO = RifleBulletPrefab;
-            WeaponNameUI.text = weaponName[selectedWeaponIndex];
-            ManaUI.text = manaCost[selectedWeaponIndex].ToString();
+            WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
+            ManaUI.text = ((Weapon)weapons[selectedWeaponIndex]).ManaCost.ToString();
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             selectedWeaponIndex = 3;
             currentWeaponGO = FlamerFlamePrefab;
-            WeaponNameUI.text = weaponName[selectedWeaponIndex];
-            ManaUI.text = manaCost[selectedWeaponIndex].ToString();
+            WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
+            ManaUI.text = ((Weapon)weapons[selectedWeaponIndex]).ManaCost.ToString();
         }
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             selectedWeaponIndex = 4;
             currentWeaponGO = GrenadePrefab;
-            WeaponNameUI.text = weaponName[selectedWeaponIndex];
-            ManaUI.text = manaCost[selectedWeaponIndex].ToString();
+            WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
+            ManaUI.text = ((Weapon)weapons[selectedWeaponIndex]).ManaCost.ToString();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -199,9 +199,9 @@ public class Shooting : MonoBehaviour
 
     void Shoot()
     {
-        nextFire = Time.time + rof[selectedWeaponIndex];
+        nextFire = Time.time + ((Weapon)weapons[selectedWeaponIndex]).RateOfFire;
 
-        if (currentMana >= manaCost[selectedWeaponIndex])
+        if (currentMana >= ((Weapon)weapons[selectedWeaponIndex]).ManaCost)
         {
             float distanceFromShooter = 12f;
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -216,29 +216,14 @@ public class Shooting : MonoBehaviour
                 {
                     projectile.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 }
-                projectile.transform.GetComponent<Rigidbody2D>().AddForce(direction * speed[selectedWeaponIndex]);
+                projectile.transform.GetComponent<Rigidbody2D>().AddForce(direction * ((Weapon)weapons[selectedWeaponIndex]).ProjectileSpeed);
             }
             
-            if (selectedWeaponIndex == 5)
-            {
-                RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, direction);
-                if (hitInfo)
-                {
-
-                    lr.SetPosition(0, transform.position + direction * 1000f);
-                    lr.SetPosition(1, hitInfo.point);
-                }
-                else
-                {
-                    lr.SetPosition(0, transform.position + direction * 1000f);
-                    lr.SetPosition(1, transform.position + direction * 10000f);
-                }
-            }
             //If not sword, because sword has no ammo
             
             
                 //substract manacost of used spell from current mana and update UI
-                currentMana -= manaCost[selectedWeaponIndex];
+                currentMana -= ((Weapon)weapons[selectedWeaponIndex]).ManaCost;
                 Mana.text = currentMana.ToString();
 
             Debug.Log("Mana: " + currentMana + ", Max mana: " + maxMana);
