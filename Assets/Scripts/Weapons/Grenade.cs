@@ -28,7 +28,7 @@ public class Grenade : MonoBehaviour
     void OnCollisionEnter2D(Collision2D col)
     {
         Debug.Log("Grenade hit something!");
-        if (col.gameObject.tag == "NoCollideProjectile" || col.gameObject.tag == "Water")
+        if (col.gameObject.CompareTag("NoCollideProjectile") || col.gameObject.CompareTag("Water"))
         {
             Explode();
             Physics2D.IgnoreCollision(CC2D, col.collider, true);

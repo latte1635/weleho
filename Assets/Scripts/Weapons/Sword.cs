@@ -20,11 +20,11 @@ public class Sword : MonoBehaviour
     void OnCollisionEnter2D(Collision2D col)
     {
         Enemy1 enemy = col.collider.GetComponent<Enemy1>();
-        if (col.gameObject.tag == "NoCollideProjectile" || col.gameObject.tag == "Water")
+        if (col.gameObject.CompareTag("NoCollideProjectile") || col.gameObject.CompareTag("Water"))
         {
             Physics2D.IgnoreCollision(CC2D, col.collider, true);
         }
-        else if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.CompareTag("Enemy"))
         {
             col.gameObject.GetComponent<StatSystem>().TakeDamage(swordDamage);
             Destroy(gameObject, 0f);
@@ -37,7 +37,7 @@ public class Sword : MonoBehaviour
                 SoundManagerScript.PlaySound("spellhit");
             }
         }
-        else if (col.gameObject.tag == "Obstacle" || col.gameObject.tag == "CaveWall")
+        if (col.gameObject.CompareTag("Obstacle") || col.gameObject.CompareTag("CaveWall"))
         {
             Destroy(gameObject, 0f);
         }

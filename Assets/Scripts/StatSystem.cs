@@ -30,7 +30,7 @@ public class StatSystem : MonoBehaviour
 
     void Update()
     {
-        if (gameObject.tag != "Player" && gameObject.name != "BossTest")
+        if (!gameObject.CompareTag("Player") && gameObject.name != "BossTest")
         {
             if (gameObject.name == "Enemy3")
             {
@@ -62,15 +62,10 @@ public class StatSystem : MonoBehaviour
         if(gameObject.name == "BossTest")
         {
             int randomInt = Random.Range(0, 2);
-            switch (randomInt)
-            {
-                case 0:
-                    DropPotion(manaPotion, 50f);
-                    break;
-                case 1:
-                    DropPotion(healthPotion, 30f);
-                    break;
-            }
+            if (randomInt == 0)
+                DropPotion(manaPotion, 50f);
+            if(randomInt == 1)
+                DropPotion(healthPotion, 30f);
         }
 
         HealthUI.text = health.ToString();
@@ -78,7 +73,7 @@ public class StatSystem : MonoBehaviour
         
         if(health <= 0)
         {
-            if (manaPotion != null && gameObject.tag != "Player" && gameObject.name != "BossTest")
+            if (manaPotion != null && gameObject.CompareTag("Player") && gameObject.name != "BossTest")
             {
                 int randomInt = Random.Range(0, 2);
                 switch(randomInt)
@@ -90,15 +85,14 @@ public class StatSystem : MonoBehaviour
                         DropPotion(healthPotion, 101f);
                         break;
                 }
-                
             }
             Destroy(gameObject);
-            if (gameObject.tag == "Player")
+            if (gameObject.CompareTag("Player"))
             {
                 DeathManager.Death();
                 MusicManager.PlaySound("youdied");
             }
-            if (gameObject.tag == "Enemy")
+            if (gameObject.CompareTag("Enemy"))
             {
                 if (gameObject.name == "BossTest")
                 {
@@ -125,21 +119,21 @@ public class StatSystem : MonoBehaviour
         float randomFloat = Random.Range(0f, 100f);
         if(dropChance > randomFloat)
         {
-            GameObject itemInstance = Instantiate(lootItem, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0f), Quaternion.identity);
+            GameObject itemInstance = Instantiate(lootItem, new Vector3(transform.position.x, transform.position.y, 0f), Quaternion.identity);
             FindObjectOfType<CaveGen>().clones.Add(itemInstance);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D coll)
     {
-        if (gameObject.tag == "Player")
+        if (gameObject.CompareTag("Player"))
         {
-            if (coll.gameObject.tag == "ManaPotion")
+            if (coll.gameObject.CompareTag("ManaPotion"))
             {
                 GetComponent<Shooting>().RegenMana(200);
                 Destroy(coll.gameObject);
             }
-            if (coll.gameObject.tag == "HpPotion")
+            if (coll.gameObject.CompareTag("HpPotion"))
             {
                 RegenHealth(20);
                 Destroy(coll.gameObject);

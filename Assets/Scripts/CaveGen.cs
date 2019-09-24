@@ -172,13 +172,6 @@ public class CaveGen : MonoBehaviour
         GenerateEnemiesOfType(enemy3, enemy3Count);
         GenerateEnemiesOfType(enemy4, enemy4Count);
 
-
-
-
-
-
-
-
         enemy1Count++;
         enemy2Count++;
         enemy3Count++;

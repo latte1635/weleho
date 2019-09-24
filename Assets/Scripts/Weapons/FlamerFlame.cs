@@ -18,16 +18,16 @@ public class FlamerFlame : StatSystem
     void OnCollisionEnter2D(Collision2D col)
     {
         Debug.Log("Flame hit something!");
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.CompareTag("Enemy"))
         {
             col.gameObject.GetComponent<StatSystem>().TakeDamage(4);
             
         }
-        if (col.gameObject.tag == "Obstacle")
+        if (col.gameObject.CompareTag("Obstacle"))
         {
             
         }
-        if (col.gameObject.tag == "NoCollideProjectile" || col.gameObject.tag == "Water")
+        if (col.gameObject.CompareTag("NoCollideProjectile") || col.gameObject.CompareTag("Water"))
         {
             Physics2D.IgnoreCollision(CC2D, col.collider, true);
         }

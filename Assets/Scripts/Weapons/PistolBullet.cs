@@ -20,11 +20,11 @@ public class PistolBullet : MonoBehaviour
     void OnCollisionEnter2D(Collision2D col)
     {
 
-        if (col.gameObject.tag == "NoCollideProjectile" || col.gameObject.tag == "Water")
+        if (col.gameObject.CompareTag("NoCollideProjectile") || col.gameObject.CompareTag("Water"))
         {
             Physics2D.IgnoreCollision(CC2D, col.collider, true);
         }
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.CompareTag("Enemy"))
         {
             col.gameObject.GetComponent<StatSystem>().TakeDamage(pistolBulletDamage);
             Destroy(this.gameObject, 0f);
@@ -38,7 +38,7 @@ public class PistolBullet : MonoBehaviour
             }
            
         }
-        if (col.gameObject.tag == "Obstacle" || col.gameObject.tag == "CaveWall" || col.gameObject.tag == "CaveUnbreakableWall")
+        if (col.gameObject.CompareTag("Obstacle") || col.gameObject.CompareTag("CaveWall") || col.gameObject.CompareTag("CaveUnbreakableWall"))
         {
             
             Destroy(this.gameObject, 0f);

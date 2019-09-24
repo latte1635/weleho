@@ -18,17 +18,17 @@ public class grenadeFrag : StatSystem
     void OnCollisionEnter2D(Collision2D col)
     {
         Debug.Log("Frag hit something!");
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.CompareTag("Enemy"))
         {
             col.gameObject.GetComponent<StatSystem>().TakeDamage(60);
             Destroy(gameObject, 0f);
         }
-        if (col.gameObject.tag == "Obstacle" || col.gameObject.tag == "CaveWall")
+        if (col.gameObject.CompareTag("Obstacle") || col.gameObject.CompareTag("CaveWall"))
         {
             //CaveGen.MineWallTile();
             Destroy(gameObject, 0f);
         }
-        if (col.gameObject.tag == "Water")
+        if (col.gameObject.CompareTag("Water"))
         {
             Physics2D.IgnoreCollision(CC2D, col.collider, true);
         }

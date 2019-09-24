@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using GameAnalyticsSDK;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,14 +28,20 @@ public class PlayerController : MonoBehaviour
   
 
     //???
-    public static string dir;
-
+    //public static string dir;
     
     private static bool playerExists;
+
+    void Awake()
+    {
+        GameAnalytics.Initialize();
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "taso1");
+    }
 
     // Start is called before the first frame update
     public void Start()
     {
+        
         CC2D = GetComponent<CapsuleCollider2D>();
         saveMoveSpeed = moveSpeed;
         playerPos = GetComponent<Transform>();
@@ -79,33 +86,18 @@ public class PlayerController : MonoBehaviour
         //if no directional move button is pressed, character doesn't move
         walking = false;
 
-        if (Input.GetAxisRaw("Vertical") != 0)
+        if (Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
         {
             //Give rigidbody2d of player vertical axis velocity
-            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * moveSpeed);
+            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal")* moveSpeed, Input.GetAxisRaw("Vertical") * moveSpeed);
             walking = true;
             lastMove = new Vector2(0f, Input.GetAxisRaw("Vertical"));
             
         }
-        if (Input.GetAxisRaw("Horizontal") != 0)
+        else
         {
-            //Give rigidbody2d of player horizontal axis velocity
-            rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal")* moveSpeed, rb.velocity.y);
-            walking = true;
-            lastMove = new Vector2(Input.GetAxisRaw("Horizontal"), 0f);
-            
+            rb.velocity = new Vector2(0, 0);
         }
-        
-        if(Input.GetAxisRaw("Horizontal") < 0.5 && Input.GetAxisRaw("Horizontal") > -0.5)
-        {
-            rb.velocity = new Vector2(0f, rb.velocity.y);
-        }
-
-        if (Input.GetAxisRaw("Vertical") < 0.5 && Input.GetAxisRaw("Vertical") > -0.5)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-        }
-
         
         //Choose animations to play based on player input
         anim.SetBool("Walking", walking);
@@ -118,7 +110,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D coll)
     {
         //If collides into projectiles, ignore hitboxes
-        if(coll.gameObject.tag == "NoCollideProjectile")
+        if(coll.gameObject.CompareTag("NoCollideProjectile"))
         {
             Physics2D.IgnoreCollision(CC2D, coll.collider, true);
         }

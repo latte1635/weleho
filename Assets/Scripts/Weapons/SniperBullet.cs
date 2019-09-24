@@ -17,15 +17,15 @@ public class SniperBullet : MonoBehaviour
     void OnCollisionEnter2D(Collision2D col)
     {
         Debug.Log("Bullet hit something!");
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.CompareTag("Enemy"))
         {
             col.gameObject.GetComponent<StatSystem>().TakeDamage(10);
         }
-        if (col.gameObject.tag == "Obstacle" && col.gameObject.tag == "CaveWall")
+        if (col.gameObject.CompareTag("Obstacle") || col.gameObject.CompareTag("CaveWall"))
         {
             Destroy(this.gameObject, 0f);
         }
-        if (col.gameObject.tag == "NoCollideProjectile" || col.gameObject.tag == "Water")
+        if (col.gameObject.CompareTag("NoCollideProjectile") || col.gameObject.CompareTag("Water"))
         {
             Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), col.collider, true);
         }

@@ -1,77 +1,62 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Enemy3 : MonoBehaviour
 {
-
     public float moveSpeed = .01f;
 
     private Rigidbody2D myRb;
 
-    private Transform target;
-    public Transform Target { get => target; set => target = value; }
 
+    [Header("Shooting")] public float nextFire;
 
-    [Header("Shooting")]
-    public float nextFire;
-    public float rof;
-    public float projectileSpeed;
     public GameObject projectilePrefab;
+    public float projectileSpeed;
+    public float rof;
 
+    public Transform Target { get; set; }
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         myRb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         FollowTarget();
-        if (target != null && Time.time > nextFire)
-        {
-            Shoot();
-        }
+        if (Target != null && Time.time > nextFire) Shoot();
     }
 
-    void FollowTarget()
+    private void FollowTarget()
     {
-        if (target != null)
-        {
-            myRb.velocity = new Vector3((target.position.x - transform.position.x) * moveSpeed, (target.position.y - transform.position.y) * moveSpeed, 0f);
-            //transform.position = Vector2.MoveTowards(transform.position, target.position, speed);
-        }
+        if (Target != null)
+            myRb.velocity = new Vector3((Target.position.x - transform.position.x) * moveSpeed,
+                (Target.position.y - transform.position.y) * moveSpeed, 0f);
+        //transform.position = Vector2.MoveTowards(transform.position, target.position, speed);
         else
-        {
             myRb.velocity = Vector3.zero;
-        }
     }
 
 
-
-    void Shoot()
+    private void Shoot()
     {
         nextFire = Time.time + rof;
 
-        Vector3 direction = (target.position - transform.position);
+        var direction = Target.position - transform.position;
         direction.Normalize();
 
         //calculate projectile sprite orientation when created
-        float angle = (Mathf.Atan2(direction.y, direction.x) - Mathf.PI / 4) * Mathf.Rad2Deg;
+        var angle = (Mathf.Atan2(direction.y, direction.x) - Mathf.PI / 4) * Mathf.Rad2Deg;
 
 
         //Create projectile and define its orientation
-        GameObject projectile = Instantiate(projectilePrefab, transform.position + (Vector3)(direction), Quaternion.identity);
+        var projectile = Instantiate(projectilePrefab, transform.position + direction, Quaternion.identity);
 
         projectile.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         //Give projectile its directional velocity
         projectile.transform.GetComponent<Rigidbody2D>().velocity = direction * projectileSpeed;
-
     }
-
-
 }

@@ -17,22 +17,22 @@ public class Enemy3Bullet : StatSystem
     void OnCollisionEnter2D(Collision2D col)
     {
 
-        if ( col.gameObject.tag == "EnemyProjectile" || col.gameObject.tag == "Water")
+        if ( col.gameObject.CompareTag("EnemyProjectile") || col.gameObject.CompareTag("Water"))
         {
             Physics2D.IgnoreCollision(CC2D, col.collider, true);
         }
-        if(col.gameObject.tag == "NoCollideProjectile")
+        if(col.gameObject.CompareTag("NoCollideProjectile"))
         {
             Destroy(col.gameObject);
             Destroy(gameObject);
         }
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.CompareTag("Player"))
         {
             col.gameObject.GetComponent<StatSystem>().TakeDamage(enemy3BulletDamage);
             SoundManagerScript.PlaySound("playerhit");
             Destroy(this.gameObject, 0f);
         }
-        if (col.gameObject.tag == "Obstacle")
+        if (col.gameObject.CompareTag("Obstacle"))
         {
             Destroy(this.gameObject, 0f);
         }
