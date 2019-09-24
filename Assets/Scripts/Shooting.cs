@@ -7,12 +7,9 @@ public class Shooting : MonoBehaviour
 {
     public float currentMana = 1000;
     public float maxMana = 1000;
-
     public GameObject playerPrefab;
 
     private Animator anim;
-
-    
     
     struct Weapon
     {
@@ -50,21 +47,10 @@ public class Shooting : MonoBehaviour
     public Image ManaBG;
 
     [Header("Line Renderer")]
-    //public LineRenderer lr;
     
     public GameObject caveFloor;
 
-    //Stores rate of fire of current weapon, tells when weapon can be shot again
     private float nextFire;
-
-    //Used lists here to store most weapon data, easily accessible with the index. (Could possibly be made into an array, but this works too)
-    /*string[] weaponName = { "Sword", "Magic Bolt", "Magic Missile", "Flames", "Magical Death Potion", "WIP raycast spell" };
-    int[] manaCost = { swordManaCost, pistolManaCost, rifleManaCost, flamerManaCost, grenadeManaCost, sniperManaCost };
-    float[] rof = { swordROF, pistolROF, rifleROF, flamerROF, grenadeROF, sniperROF };
-    float[] speed = { swordSpeed, pistolSpeed, rifleSpeed, flamerSpeed, grenadeSpeed, sniperSpeed };
-    bool[] holdDown = { swordAuto, pistolAuto, rifleAuto, flamerAuto, grenadeAuto, sniperAuto };
-*/
-    //GameObjects could not be put into a list while simultaneously also be able to be defined in the editor, had to create separate GameObject variable "currentWeaponGO".
 
     int selectedWeaponIndex;
     GameObject currentWeaponGO;
@@ -83,22 +69,19 @@ public class Shooting : MonoBehaviour
 
     void Start()
     {
-        //Sword selected as the default weapon, player starts with it in hand. Also updates UI.
         selectedWeaponIndex = 0;
         currentWeaponGO = SwordPrefab;
         WeaponNameUI.text = ((Weapon)weapons[selectedWeaponIndex]).Name;
         ManaUI.text = "1000";
         Debug.Log("Started");
         anim = GetComponent<Animator>();
-        Mana.transform.position = ManaBG.transform.position;//new Vector3(0, 10, 0);
+        Mana.transform.position = ManaBG.transform.position;
         maxMana = currentMana;
         ManaBar.fillAmount = currentMana / maxMana;
     }
 
     void Update()
     {
-        //Mana.text = currentMana.ToString();
-        //Determine if semi automatic or fully automatic
         if (((Weapon)weapons[selectedWeaponIndex]).HoldButton == false)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time > nextFire)
@@ -114,12 +97,10 @@ public class Shooting : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O) && Input.GetKeyDown(KeyCode.L))
         {
             RefreshMana();
         }
-
-        //Select weapon with number keys, update UI.
         
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -167,11 +148,10 @@ public class Shooting : MonoBehaviour
                 ManaBar.fillAmount = currentMana / maxMana;
             }
         }
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) && Input.GetKeyDown(KeyCode.I))
         {
             StartCoroutine(ManaRegen(1, 200, 0.01f));
         }
-        
     }
 
     void RefreshMana()
@@ -186,15 +166,11 @@ public class Shooting : MonoBehaviour
         double distance;
         
         distance = Math.Sqrt(Math.Pow(Math.Abs(Camera.main.ScreenToWorldPoint(Input.mousePosition).x - GameObject.FindWithTag("Player").transform.position.x), 2) + Math.Pow(Math.Abs(Camera.main.ScreenToWorldPoint(Input.mousePosition).y - GameObject.FindWithTag("Player").transform.position.y), 2f));
-
         if (distance < range)
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     void Shoot()
@@ -219,18 +195,11 @@ public class Shooting : MonoBehaviour
                 projectile.transform.GetComponent<Rigidbody2D>().AddForce(direction * ((Weapon)weapons[selectedWeaponIndex]).ProjectileSpeed);
             }
             
-            //If not sword, because sword has no ammo
-            
-            
-                //substract manacost of used spell from current mana and update UI
-                currentMana -= ((Weapon)weapons[selectedWeaponIndex]).ManaCost;
-                Mana.text = currentMana.ToString();
-
-            Debug.Log("Mana: " + currentMana + ", Max mana: " + maxMana);
-                ManaBar.fillAmount = currentMana / maxMana;
-
+            currentMana -= ((Weapon)weapons[selectedWeaponIndex]).ManaCost;
+            Mana.text = currentMana.ToString();
+            Debug.Log("Mana: " + currentMana + ", Max mana: " + maxMana); 
+            ManaBar.fillAmount = currentMana / maxMana;
         }
-       
     }
 
     public IEnumerator ManaRegen(int amount, int duration, float tickSpeed)
@@ -241,22 +210,16 @@ public class Shooting : MonoBehaviour
             {
                 currentMana++;
                 Mana.text = currentMana.ToString();
-                
             }
-            //Debug.Log(currentMana + " / " + maxMana);
             ManaBar.fillAmount = currentMana / maxMana;
-            
             yield return new WaitForSeconds(tickSpeed);
         }
-        
     }
 
     public void RegenMana(int amount)
     {
         StartCoroutine(ManaRegen(1, amount, 0.01f));
     }
-
-    
 }
 
 
