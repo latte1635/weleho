@@ -19,7 +19,11 @@ public class Enemy2 : MonoBehaviour
     private float timeBetweenShots;
     public float startTimeBetweenShots;
 
-    // Start is called before the first frame update
+    void Awake()
+    {
+        gameObject.GetComponent<StatSystem>().SetCharacterType(2);
+    }
+    
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;

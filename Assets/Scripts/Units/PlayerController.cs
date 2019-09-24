@@ -9,31 +9,22 @@ public class PlayerController : MonoBehaviour
 {
     private Animator anim;
     private Rigidbody2D rb;
-
     private Transform playerPos;
     private CapsuleCollider2D CC2D;
 
-    
-    private StatSystem statSystem;
-    
     public float moveSpeed;
     private float saveMoveSpeed;
     public float runSpeed;
-
-    //walking is used in animations to determine if the character is walking
     private bool walking;
-
-    //lastMove saves the direction the player moved in before stopping to decide idle standing direction
     private Vector2 lastMove;
-  
-
-    //???
-    //public static string dir;
-    
     private static bool playerExists;
+    private StatSystem statSystem;
 
     void Awake()
     {
+        statSystem = gameObject.GetComponent<StatSystem>();
+        statSystem.SetCharacterType(0);
+        
         GameAnalytics.Initialize();
         GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "taso1");
     }
@@ -47,9 +38,7 @@ public class PlayerController : MonoBehaviour
         playerPos = GetComponent<Transform>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        statSystem = GetComponent<StatSystem>();
-
-
+        
         statSystem.UpdateCharacterUI();
 
         //checks if player is already in scene

@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class StatSystem : MonoBehaviour
 {
@@ -17,6 +19,7 @@ public class StatSystem : MonoBehaviour
     public GameObject manaPotion;
     public GameObject healthPotion;
 
+    private UInt16 characterType;
     Vector3 namePos;
 
     void Start()
@@ -25,21 +28,17 @@ public class StatSystem : MonoBehaviour
         
         HealthUI.text = health.ToString();
         HealthBar.fillAmount = health / maxHealth;
-        
     }
 
     void Update()
     {
-        if (!gameObject.CompareTag("Player") && gameObject.name != "BossTest")
+        if (characterType != 0 && characterType != 5)
         {
-            if (gameObject.name == "Enemy3")
-            {
+            if (characterType != 3)
                 namePos = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 64;
-            }
             else
-            {
                 namePos = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 48;
-            }
+            
             Vector3 healthPos = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 30;
             Vector3 HealthBarPos = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 30;
             Vector3 BarBGPos = Camera.main.WorldToScreenPoint(transform.position) + Vector3.up * 30;
@@ -49,23 +48,16 @@ public class StatSystem : MonoBehaviour
             HealthBar.rectTransform.position = HealthBarPos;
             BarBG.rectTransform.position = BarBGPos;
         }
-        if(gameObject.name == "Enemy3")
-        {
-            
-        }
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
         
-        if(gameObject.name == "BossTest")
+        if(characterType == 5)
         {
-            int randomInt = Random.Range(0, 2);
-            if (randomInt == 0)
-                DropPotion(manaPotion, 50f);
-            if(randomInt == 1)
-                DropPotion(healthPotion, 30f);
+            if (Random.Range(0, 2) == 0)     DropPotion(manaPotion, 50f);
+            if (Random.Range(0, 2) == 1)     DropPotion(healthPotion, 30f);
         }
 
         HealthUI.text = health.ToString();
@@ -73,28 +65,22 @@ public class StatSystem : MonoBehaviour
         
         if(health <= 0)
         {
-            if (manaPotion != null && gameObject.CompareTag("Player") && gameObject.name != "BossTest")
+            if (manaPotion != null && characterType != 0 && characterType != 5)
             {
                 int randomInt = Random.Range(0, 2);
-                switch(randomInt)
-                {
-                    case 0:
-                        DropPotion(manaPotion, 101f);
-                        break;
-                    case 1:
-                        DropPotion(healthPotion, 101f);
-                        break;
-                }
+                if(randomInt == 0) DropPotion(manaPotion, 101f);
+                if(randomInt == 1) DropPotion(healthPotion, 101f);
+                 
             }
             Destroy(gameObject);
-            if (gameObject.CompareTag("Player"))
+            if (characterType == 0)
             {
                 DeathManager.Death();
                 MusicManager.PlaySound("youdied");
             }
-            if (gameObject.CompareTag("Enemy"))
+            if (characterType > 0)
             {
-                if (gameObject.name == "BossTest")
+                if (characterType == 5)
                 {
                     WinManager.Win();
                     MusicManager.PlaySound("win");
@@ -126,7 +112,7 @@ public class StatSystem : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D coll)
     {
-        if (gameObject.CompareTag("Player"))
+        if (characterType == 0)
         {
             if (coll.gameObject.CompareTag("ManaPotion"))
             {
@@ -160,5 +146,15 @@ public class StatSystem : MonoBehaviour
     public void RegenHealth(int amount)
     {
         StartCoroutine(HealthRegen(1, amount, 0.01f));
+    }
+
+    public void SetCharacterType(UInt16 typeIndex)
+    {
+        characterType = typeIndex;
+    }
+
+    public UInt16 GetCharacterType()
+    {
+        return characterType;
     }
 }

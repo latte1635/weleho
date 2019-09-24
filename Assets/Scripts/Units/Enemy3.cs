@@ -13,10 +13,13 @@ public class Enemy3 : MonoBehaviour
     public float projectileSpeed;
     public float rof;
 
-    public Transform Target { get; set; }
+    public Transform target { get; set; }
 
-
-    // Start is called before the first frame update
+    void Awake()
+    {
+        gameObject.GetComponent<StatSystem>().SetCharacterType(3);
+    }
+    
     private void Start()
     {
         myRb = GetComponent<Rigidbody2D>();
@@ -26,14 +29,14 @@ public class Enemy3 : MonoBehaviour
     private void Update()
     {
         FollowTarget();
-        if (Target != null && Time.time > nextFire) Shoot();
+        if (target != null && Time.time > nextFire) Shoot();
     }
 
     private void FollowTarget()
     {
-        if (Target != null)
-            myRb.velocity = new Vector3((Target.position.x - transform.position.x) * moveSpeed,
-                (Target.position.y - transform.position.y) * moveSpeed, 0f);
+        if (target != null)
+            myRb.velocity = new Vector3((target.position.x - transform.position.x) * moveSpeed,
+                (target.position.y - transform.position.y) * moveSpeed, 0f);
         //transform.position = Vector2.MoveTowards(transform.position, target.position, speed);
         else
             myRb.velocity = Vector3.zero;
@@ -44,7 +47,7 @@ public class Enemy3 : MonoBehaviour
     {
         nextFire = Time.time + rof;
 
-        var direction = Target.position - transform.position;
+        var direction = target.position - transform.position;
         direction.Normalize();
 
         //calculate projectile sprite orientation when created

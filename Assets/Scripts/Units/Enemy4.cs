@@ -15,14 +15,17 @@ public class Enemy4 : MonoBehaviour
 
     public Transform Target { get; set; }
 
-
-    // Start is called before the first frame update
+    void Awake()
+    {
+        gameObject.GetComponent<StatSystem>().SetCharacterType(4);
+    }
+    
     private void Start()
     {
         myRb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
+    
     private void Update()
     {
         FollowTarget();

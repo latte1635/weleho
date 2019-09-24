@@ -1,28 +1,29 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
 
     public float moveSpeed;
-
     public float health = 70f;
-
     private Rigidbody2D myRigidbody;
-
     private bool moving;
-
     public float timeBetweenMove;
     private float timeBetweenMoveCounter;
-
     public float timeToMove;
     private float timeToMoveCounter;
-
     private Vector3 moveDirection;
+    private StatSystem statSystem;
 
-
-    // Start is called before the first frame update
+    void Awake()
+    {
+        statSystem = gameObject.GetComponent<StatSystem>();
+        statSystem.SetCharacterType(1);
+    }
+    
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
@@ -33,7 +34,6 @@ public class Enemy : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (moving)

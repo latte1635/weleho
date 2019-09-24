@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class Shooting : MonoBehaviour
 {
     public float currentMana = 1000;
@@ -63,20 +62,18 @@ public class Shooting : MonoBehaviour
 
     [Header("Line Renderer")]
     public LineRenderer lr;
-
     
-
     public GameObject caveFloor;
 
     //Stores rate of fire of current weapon, tells when weapon can be shot again
     private float nextFire;
 
     //Used lists here to store most weapon data, easily accessible with the index. (Could possibly be made into an array, but this works too)
-    string[] weaponName = new string[] { "Sword", "Magic Bolt", "Magic Missile", "Flames", "Magical Death Potion", "WIP raycast spell" };
-    int[] manaCost = new int[] { swordManaCost, pistolManaCost, rifleManaCost, flamerManaCost, grenadeManaCost, sniperManaCost };
-    float[] rof = new float[] { swordROF, pistolROF, rifleROF, flamerROF, grenadeROF, sniperROF };
-    float[] speed = new float[] { swordSpeed, pistolSpeed, rifleSpeed, flamerSpeed, grenadeSpeed, sniperSpeed };
-    bool[] holdDown = new bool[] { swordAuto, pistolAuto, rifleAuto, flamerAuto, grenadeAuto, sniperAuto };
+    string[] weaponName = { "Sword", "Magic Bolt", "Magic Missile", "Flames", "Magical Death Potion", "WIP raycast spell" };
+    int[] manaCost = { swordManaCost, pistolManaCost, rifleManaCost, flamerManaCost, grenadeManaCost, sniperManaCost };
+    float[] rof = { swordROF, pistolROF, rifleROF, flamerROF, grenadeROF, sniperROF };
+    float[] speed = { swordSpeed, pistolSpeed, rifleSpeed, flamerSpeed, grenadeSpeed, sniperSpeed };
+    bool[] holdDown = { swordAuto, pistolAuto, rifleAuto, flamerAuto, grenadeAuto, sniperAuto };
 
     //GameObjects could not be put into a list while simultaneously also be able to be defined in the editor, had to create separate GameObject variable "currentWeaponGO".
 
@@ -159,13 +156,6 @@ public class Shooting : MonoBehaviour
             WeaponNameUI.text = weaponName[selectedWeaponIndex];
             ManaUI.text = manaCost[selectedWeaponIndex].ToString();
         }
-        /*if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            selectedWeaponIndex = 5;
-            currentWeaponGO = SniperPrefab;
-            WeaponNameUI.text = weaponName[selectedWeaponIndex];
-            ManaUI.text = manaCost[selectedWeaponIndex].ToString();
-        }*/
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (DistanceCheck(4f) && currentMana >= mineManaCost) {
@@ -215,36 +205,26 @@ public class Shooting : MonoBehaviour
         {
             float distanceFromShooter = 12f;
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //Find mouse direction related to player
             Vector3 direction = (worldMousePos - transform.position).normalized;
-            //direction.Normalize();
-
-            //calculate projectile sprite orientation when created
             float angle = (Mathf.Atan2(direction.y, direction.x) - Mathf.PI / 4) * Mathf.Rad2Deg;
             if (selectedWeaponIndex != 5)
             {
-                //Create projectile and define its orientation
+                
                 GameObject projectile = Instantiate(currentWeaponGO, transform.position + direction * distanceFromShooter, Quaternion.identity);
-
-                //if not flame or grenade
+                
                 if (selectedWeaponIndex != 3 && selectedWeaponIndex != 4)
                 {
-                    //rotate projectiles that have to be rotated
                     projectile.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
                 }
-                //Give projectile its directional velocity
                 projectile.transform.GetComponent<Rigidbody2D>().AddForce(direction * speed[selectedWeaponIndex]);
             }
-
-            //Shooting a raycast spell
+            
             if (selectedWeaponIndex == 5)
             {
                 RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, direction);
-                //if raycast hits something
                 if (hitInfo)
                 {
-                    Debug.Log(hitInfo.transform.gameObject.name);
-                    //Destroy(hitInfo.transform.gameObject);
+
                     lr.SetPosition(0, transform.position + direction * 1000f);
                     lr.SetPosition(1, hitInfo.point);
                 }
@@ -261,7 +241,7 @@ public class Shooting : MonoBehaviour
                 currentMana -= manaCost[selectedWeaponIndex];
                 Mana.text = currentMana.ToString();
 
-            Debug.Log(currentMana + "___" + maxMana);
+            Debug.Log("Mana: " + currentMana + ", Max mana: " + maxMana);
                 ManaBar.fillAmount = currentMana / maxMana;
 
         }

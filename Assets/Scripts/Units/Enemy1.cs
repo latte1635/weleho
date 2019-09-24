@@ -9,9 +9,7 @@ public class Enemy1 : MonoBehaviour
     public float moveSpeed;
     
     private Rigidbody2D myRigidbody;
-
-    private StatSystem statSystem;
-
+    
     public int enemy1Damage = 6;
 
     private bool moving;
@@ -21,25 +19,23 @@ public class Enemy1 : MonoBehaviour
     public float timeToMove;
     private float timeToMoveCounter;
     private Vector3 moveDirection;
+    private StatSystem statSystem;
 
+    void Awake()
+    {
+        statSystem = gameObject.GetComponent<StatSystem>();
+        statSystem.SetCharacterType(1);
+    }
     
-    // Start is called before the first frame update
     void Start()
     {
-
         myRigidbody = GetComponent<Rigidbody2D>();
-        
-        
         timeBetweenMoveCounter = timeBetweenMove;
         timeToMoveCounter = timeToMove;
-
-        statSystem = GetComponent<StatSystem>();
-
-
         statSystem.UpdateCharacterUI();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         //healthUI.transform.position = transform.position + healthUIOffset;
@@ -74,7 +70,7 @@ public class Enemy1 : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (statSystem.GetCharacterType() == 0)
         {
             
             col.gameObject.GetComponent<StatSystem>().TakeDamage(enemy1Damage);

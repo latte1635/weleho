@@ -15,14 +15,14 @@ public class Enemy3Range : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            parent.Target = collision.transform;
+            parent.target = collision.transform;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            parent.Target = null;
+            parent.target = null;
         }
     }
 
