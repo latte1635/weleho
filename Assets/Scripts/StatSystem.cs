@@ -75,7 +75,7 @@ public class StatSystem : MonoBehaviour
             
             if (characterType == 0)
             {
-                GetComponent<PlayerController>().OnGameEnd();
+                GetComponent<PlayerController>().OnGameEnd(false);
                 DeathManager.Death();
                 MusicManager.PlaySound("youdied");
             }
@@ -86,7 +86,7 @@ public class StatSystem : MonoBehaviour
                 Debug.Log("Mobs killed: " + GameObject.FindWithTag("Player").GetComponent<PlayerController>().gaStats.Mobkills);
                 if (characterType == 5)
                 {
-                    GameObject.FindWithTag("Player").GetComponent<PlayerController>().gaStats.GameWon = 1;
+                    GameObject.FindWithTag("Player").GetComponent<PlayerController>().OnGameEnd(true);
                     WinManager.Win();
                     MusicManager.PlaySound("win");
                 }

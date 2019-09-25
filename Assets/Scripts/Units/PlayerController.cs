@@ -8,7 +8,6 @@ using GameAnalyticsSDK;
 public class GA_Stats
 {
     public float  PlayTimeSeconds               { get; set; }
-    public int     GameWon                      { get; set; }
     public float   PlayerHealth                 { get; set; }
     public float   PlayerMana                   { get; set; }
     public int     HealthPotionsCollected       { get; set; }
@@ -124,10 +123,8 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void OnGameEnd()
+    private void SendGaInfo()
     {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, "Game Ended");
-        
         DateTime timerEnd = DateTime.Now;
         GetComponent<PlayerController>().gaStats.PlayTimeSeconds = (float)(timerEnd - timerStart).TotalSeconds;
 
@@ -136,7 +133,6 @@ public class PlayerController : MonoBehaviour
         
         
         GameAnalytics.NewDesignEvent("Play time in seconds", gaStats.PlayTimeSeconds);
-        GameAnalytics.NewDesignEvent("Game won", gaStats.GameWon);
         GameAnalytics.NewDesignEvent("Player health when game ended", gaStats.PlayerHealth);
         GameAnalytics.NewDesignEvent("Player mana when game ended", gaStats.PlayerMana);
         GameAnalytics.NewDesignEvent("Health potions collected", gaStats.HealthPotionsCollected);
@@ -147,6 +143,20 @@ public class PlayerController : MonoBehaviour
         GameAnalytics.NewDesignEvent("Magic missiles thrown", gaStats.WeaponUsedRifle);
         GameAnalytics.NewDesignEvent("Flame magic thrown", gaStats.WeaponUsedFlame);
         GameAnalytics.NewDesignEvent("Grenades thrown", gaStats.WeaponUsedGrenade);
+    }
+
+    public void OnGameEnd(bool won)
+    {
+        switch (won)
+        {
+            case false:
+                GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail, "Game Ended, Player lost");
+                break;
+            case true:
+                GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, "Game Ended, Player won");
+                break;
+        }
+        SendGaInfo();
     }
 }
 

@@ -27,25 +27,30 @@ MonoBehaviour:
   CustomArea: 
   gameKey:
   - ed52d050c731d9da7475da34f1caff53
+  - d5d6503a34433ef3ac187607f0f1dc0b
   - 
   secretKey:
   - 474d437c665e98a94e6a086a00eddc0cf14772a1
+  - dc7b1d03f96eb481407a30ed1c57d188952d93c2
   - 
   Build:
   - 0.1
   - 0.1
+  - 0.1
   SelectedPlatformStudio:
+  - studio__
   - studio__
   SelectedPlatformGame:
   - weleho
-  SelectedPlatformGameID: 5d440100
-  SelectedStudio: 02000000
-  SelectedGame: 01000000
+  - weleho(Windows)
+  SelectedPlatformGameID: 5d440100ed440100
+  SelectedStudio: 0200000002000000
+  SelectedGame: 0100000002000000
   NewVersion: 
   Changes: 
   SignUpOpen: 0
   StudioName: W3L3H0 devteam
-  GameName: weleho
+  GameName: weleho(Windows)
   EmailGA: lauri.lundell@outlook.com
   IntroScreen: 0
   InfoLogEditor: 1
@@ -59,8 +64,8 @@ MonoBehaviour:
   CustomDimensions03: []
   ResourceItemTypes: []
   ResourceCurrencies: []
-  LastCreatedGamePlatform: 5
-  Platforms: 0d000000
+  LastCreatedGamePlatform: 6
+  Platforms: 0d00000002000000
   CurrentInspectorState: 1
   ClosedHints: 
   DisplayHints: 0
@@ -87,7 +92,7 @@ MonoBehaviour:
   IncludeGooglePlay: 1
   FpsCriticalThreshold: 20
   FpsCirticalSubmitInterval: 1
-  PlatformFoldOut: 01
+  PlatformFoldOut: 0101
   CustomDimensions01FoldOut: 0
   CustomDimensions02FoldOut: 0
   CustomDimensions03FoldOut: 0
