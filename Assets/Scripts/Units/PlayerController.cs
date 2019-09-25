@@ -7,16 +7,15 @@ using GameAnalyticsSDK;
 
 public class GA_Stats
 {
-    public int     PlayTimeMinutes              { get; set; }
-    public bool    GameWon                      { get; set; }
-    
-    public int     PlayerHealth                 { get; set; }
-    public int     PlayerMana                   { get; set; }
+    public float  PlayTimeSeconds               { get; set; }
+    public int     GameWon                      { get; set; }
+    public float   PlayerHealth                 { get; set; }
+    public float   PlayerMana                   { get; set; }
     public int     HealthPotionsCollected       { get; set; }
     public int     ManaPotionsCollected         { get; set; }
     
     public int     Mobkills                     { get; set; }
-    public int     WeaponUseSword               { get; set; }
+    public int     WeaponUsedSword              { get; set; }
     public int     WeaponUsedPistol             { get; set; }
     public int     WeaponUsedRifle              { get; set; }
     public int     WeaponUsedFlame              { get; set; }
@@ -38,12 +37,13 @@ public class PlayerController : MonoBehaviour
     private Vector2 lastMove;
     private static bool playerExists;
     private StatSystem statSystem;
-
+    public GA_Stats gaStats;
+    public DateTime timerStart;
     
-    
-
     void Awake()
     {
+        gaStats = new GA_Stats();
+        timerStart = DateTime.Now;
         statSystem = gameObject.GetComponent<StatSystem>();
         statSystem.SetCharacterType(0);
         
@@ -102,15 +102,12 @@ public class PlayerController : MonoBehaviour
             //Give rigidbody2d of player vertical axis velocity
             rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal")* moveSpeed, Input.GetAxisRaw("Vertical") * moveSpeed);
             walking = true;
-            lastMove = new Vector2(0f, Input.GetAxisRaw("Vertical"));
-            
+            lastMove = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         }
         else
         {
             rb.velocity = new Vector2(0, 0);
         }
-        
-        //Choose animations to play based on player input
         anim.SetBool("Walking", walking);
         anim.SetFloat("SpeedX", Input.GetAxisRaw("Horizontal"));
         anim.SetFloat("SpeedY", Input.GetAxisRaw("Vertical"));
@@ -120,14 +117,37 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D coll)
     {
-        //If collides into projectiles, ignore hitboxes
         if(coll.gameObject.CompareTag("NoCollideProjectile"))
         {
             Physics2D.IgnoreCollision(CC2D, coll.collider, true);
         }
         
     }
-    
+
+    public void OnGameEnd()
+    {
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, "Game Ended");
+        
+        DateTime timerEnd = DateTime.Now;
+        GetComponent<PlayerController>().gaStats.PlayTimeSeconds = (float)(timerEnd - timerStart).TotalSeconds;
+
+        gaStats.PlayerHealth = GetComponent<StatSystem>().health;
+        gaStats.PlayerMana = GetComponent<Shooting>().currentMana;
+        
+        
+        GameAnalytics.NewDesignEvent("Play time in seconds", gaStats.PlayTimeSeconds);
+        GameAnalytics.NewDesignEvent("Game won", gaStats.GameWon);
+        GameAnalytics.NewDesignEvent("Player health when game ended", gaStats.PlayerHealth);
+        GameAnalytics.NewDesignEvent("Player mana when game ended", gaStats.PlayerMana);
+        GameAnalytics.NewDesignEvent("Health potions collected", gaStats.HealthPotionsCollected);
+        GameAnalytics.NewDesignEvent("Mana potions collected", gaStats.ManaPotionsCollected);
+        GameAnalytics.NewDesignEvent("Mobs killed", gaStats.Mobkills);
+        GameAnalytics.NewDesignEvent("Sword swings", gaStats.WeaponUsedSword);
+        GameAnalytics.NewDesignEvent("Magic bolts thrown", gaStats.WeaponUsedPistol);
+        GameAnalytics.NewDesignEvent("Magic missiles thrown", gaStats.WeaponUsedRifle);
+        GameAnalytics.NewDesignEvent("Flame magic thrown", gaStats.WeaponUsedFlame);
+        GameAnalytics.NewDesignEvent("Grenades thrown", gaStats.WeaponUsedGrenade);
+    }
 }
 
 

@@ -146,6 +146,7 @@ public class Shooting : MonoBehaviour
                 }
                 Mana.text = currentMana.ToString();
                 ManaBar.fillAmount = currentMana / maxMana;
+                GetComponent<PlayerController>().gaStats.TimesDug++;
             }
         }
         if (Input.GetKeyDown(KeyCode.P) && Input.GetKeyDown(KeyCode.I))
@@ -175,6 +176,12 @@ public class Shooting : MonoBehaviour
 
     void Shoot()
     {
+        if (selectedWeaponIndex == 0) GetComponent<PlayerController>().gaStats.WeaponUsedSword++;
+        if (selectedWeaponIndex == 1) GetComponent<PlayerController>().gaStats.WeaponUsedPistol++;
+        if (selectedWeaponIndex == 2) GetComponent<PlayerController>().gaStats.WeaponUsedRifle++;
+        if (selectedWeaponIndex == 3) GetComponent<PlayerController>().gaStats.WeaponUsedFlame++;
+        if (selectedWeaponIndex == 4) GetComponent<PlayerController>().gaStats.WeaponUsedGrenade++;
+        
         nextFire = Time.time + ((Weapon)weapons[selectedWeaponIndex]).RateOfFire;
 
         if (currentMana >= ((Weapon)weapons[selectedWeaponIndex]).ManaCost)

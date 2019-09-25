@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.CompareTag("Player"))
         {
             Destroy(col.gameObject);
             Debug.Log("Game Over!");

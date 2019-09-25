@@ -72,16 +72,21 @@ public class StatSystem : MonoBehaviour
                 if(randomInt == 1) DropPotion(healthPotion, 101f);
                  
             }
-            Destroy(gameObject);
+            
             if (characterType == 0)
             {
+                GetComponent<PlayerController>().OnGameEnd();
                 DeathManager.Death();
                 MusicManager.PlaySound("youdied");
             }
+            
             if (characterType > 0)
             {
+                GameObject.FindWithTag("Player").GetComponent<PlayerController>().gaStats.Mobkills++;
+                Debug.Log("Mobs killed: " + GameObject.FindWithTag("Player").GetComponent<PlayerController>().gaStats.Mobkills);
                 if (characterType == 5)
                 {
+                    GameObject.FindWithTag("Player").GetComponent<PlayerController>().gaStats.GameWon = 1;
                     WinManager.Win();
                     MusicManager.PlaySound("win");
                 }
@@ -90,6 +95,7 @@ public class StatSystem : MonoBehaviour
                     SoundManagerScript.PlaySound("enemydeath1");
                 }
             }
+            Destroy(gameObject);
         }
     }
 
@@ -97,7 +103,6 @@ public class StatSystem : MonoBehaviour
     {
         HealthUI.text = health.ToString();
         HealthBar.fillAmount = health / maxHealth;
-        
     }
 
     public void DropPotion(GameObject lootItem, float dropChance)
@@ -116,11 +121,13 @@ public class StatSystem : MonoBehaviour
         {
             if (coll.gameObject.CompareTag("ManaPotion"))
             {
+                GetComponent<PlayerController>().gaStats.ManaPotionsCollected++;
                 GetComponent<Shooting>().RegenMana(200);
                 Destroy(coll.gameObject);
             }
             if (coll.gameObject.CompareTag("HpPotion"))
             {
+                GetComponent<PlayerController>().gaStats.HealthPotionsCollected++;
                 RegenHealth(20);
                 Destroy(coll.gameObject);
             }

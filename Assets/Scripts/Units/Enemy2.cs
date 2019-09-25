@@ -83,23 +83,17 @@ public class Enemy2 : MonoBehaviour
             }
         
     }
-
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.CompareTag("Player"))
         {
             SoundManagerScript.PlaySound("playerhit");
             col.gameObject.GetComponent<StatSystem>().TakeDamage(enemy1Damage);
 
         }
-        if (col.gameObject.tag == "Obstacle")
-        {
-            //Destroy(this.gameObject, 0f);
-        } 
-        if (col.gameObject.tag == "NoCollideProjectile")
+        if (col.gameObject.CompareTag("NoCollideProjectile"))
         {
             Destroy(col.gameObject);
-            //Destroy(gameObject);
         }
     }
 }
