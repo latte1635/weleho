@@ -5,6 +5,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using GameAnalyticsSDK;
 
+public class GA_Stats
+{
+    public int     PlayTimeMinutes              { get; set; }
+    public bool    GameWon                      { get; set; }
+    
+    public int     PlayerHealth                 { get; set; }
+    public int     PlayerMana                   { get; set; }
+    public int     HealthPotionsCollected       { get; set; }
+    public int     ManaPotionsCollected         { get; set; }
+    
+    public int     Mobkills                     { get; set; }
+    public int     WeaponUseSword               { get; set; }
+    public int     WeaponUsedPistol             { get; set; }
+    public int     WeaponUsedRifle              { get; set; }
+    public int     WeaponUsedFlame              { get; set; }
+    public int     WeaponUsedGrenade            { get; set; }
+    public int     TimesDug                     { get; set; }
+}
+
 public class PlayerController : MonoBehaviour
 {
     private Animator anim;
@@ -20,13 +39,16 @@ public class PlayerController : MonoBehaviour
     private static bool playerExists;
     private StatSystem statSystem;
 
+    
+    
+
     void Awake()
     {
         statSystem = gameObject.GetComponent<StatSystem>();
         statSystem.SetCharacterType(0);
         
         GameAnalytics.Initialize();
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "taso1");
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "Game start");
     }
 
     // Start is called before the first frame update
