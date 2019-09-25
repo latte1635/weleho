@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/bigchungus.unity
     guid: 6bee79b3fbdaf3541b0ec779aef1838b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/WinScreen.unity
     guid: 5470da5400a65964f86ad913090bf2ce
   - enabled: 0
